@@ -40,6 +40,12 @@ app.get("/users", async (req , res)=>{
     res.send(result)
 })
 
+app.post("/create-jobs", async (req , res)=>{
+    const body = req.body
+    const result = await jobs.insertOne(body);
+    res.send(result) 
+})
+
 app.listen(port, ()=>{
     console.log(`The server is running ${port}`);
     
