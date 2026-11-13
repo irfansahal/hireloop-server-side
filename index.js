@@ -47,7 +47,31 @@ app.post("/create-jobs", async (req , res)=>{
 })
 
 app.get("/jobs", async (req, res)=>{
-   const cursor = jobs.find({});
+
+    const query = {}
+    
+    if(req.query){
+        if(req.query.typesOfJob){
+             query.typesOfJob = req.query.typesOfJob
+        }
+        if(req.query.categoryOfJob){
+            query.categoryOfJob = req.query.categoryOfJob
+        }
+        if(req.query.remote){
+            query.remote = req.query.remote === 'true'
+        }
+
+        if(req.query.search){
+           query.$or = [
+             { title : { $regex : req.query.search , $options : 'i'}},
+              { requirements : { $regex : req.query.search , $options : 'i'}},
+                { city : { $regex : req.query.search , $options : 'i'}},  
+            ]
+        }
+    }
+    
+    console.log("Search Quary", query);
+   const cursor = jobs.find(query);
    const result = await cursor.toArray();
    res.send(result)
 })
