@@ -27,7 +27,7 @@ const hireloopDB = await connnectedClient.db("hireloopDB");
 
 const users = await hireloopDB.collection("user")
 const jobs = await hireloopDB.collection("jobs")
-
+const applications = await hireloopDB.collection("applications")
 const port = process.env.port | "5000";
 
 app.get("/", (req, res)=>{
@@ -76,11 +76,36 @@ app.get("/jobs", async (req, res)=>{
    res.send(result)
 })
 
+app.get("/job/:id", async (req , res)=>{
+    const jobId = req.params.id;
+    const quary = { _id : new ObjectId(jobId)};
+    const result = await jobs.findOne(quary);
+    res.send(result)
+})
+
 app.delete("/jobs/:id", async (req, res)=>{
     const jobId = req.params.id
     const quary = {_id : new ObjectId(jobId)}
     const deletedData = await jobs.deleteOne(quary);
     res.send(deletedData)    
+})
+
+app.post("/application", async (req , res) => {
+    const body = req.body;
+    const onApplication = await applications.insertOne(body);
+    res.send(onApplication)
+})
+
+app.get("/application", async (req , res)=>{
+
+    const query = {}
+    
+    if(req.query.applicationId){
+        query.userId = req.query.applicationId
+    }
+  const cursor =  applications.find(query)
+  const result = await cursor.toArray();
+  res.send(result)
 })
 
 app.listen(port, ()=>{
