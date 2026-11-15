@@ -108,6 +108,15 @@ app.get("/application", async (req , res)=>{
   res.send(result)
 })
 
+app.get("/application/count", async (req , res)=>{
+    const query = {}
+    if(req.query.applicationId){
+        query.userId = req.query.applicationId 
+    }
+    const result = await applications.countDocuments(query);
+    res.send({count : result })
+})
+
 app.listen(port, ()=>{
     console.log(`The server is running ${port}`);
     
