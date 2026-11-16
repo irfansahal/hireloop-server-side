@@ -55,6 +55,20 @@ app.get("/users/:id/premium", async (req , res)=>{
    res.send(result)
 })
 
+app.get("/users/:id/role", async (req , res)=>{
+    const { id } = req.params
+    const query = { _id : new ObjectId(id) }
+    const updateDoc = {
+        $set: {
+            role : req.body.role
+        }
+    }
+    const result = await users.updateOne(
+        query,
+        updateDoc
+    )
+    res.send(result)
+})
 
 app.post("/create-jobs", async (req , res)=>{
     const body = req.body
@@ -139,6 +153,21 @@ app.get("/application/count", async (req , res)=>{
     const result = await applications.countDocuments(query);
     res.send({count : result })
 })
+
+app.patch("/applications/:id", async (req , res)=>{
+    const { id } = req.params;
+    const query = { _id : new ObjectId(id)}
+    const updateDoc = {
+        $set: {
+            status : req.body.status
+        }
+    }
+    const result = await applications.updateOne(
+        query,
+        updateDoc
+    );
+    res.send(result)
+});
 
 // payment related 
 app.post("/payment/checkoute-varify" , async (req , res) => {
