@@ -301,3 +301,5 @@ app.listen(port, ()=>{
     console.log(`The server is running ${port}`);
     
 })
+
+export default app
